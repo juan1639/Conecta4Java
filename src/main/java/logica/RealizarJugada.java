@@ -9,9 +9,7 @@ public class RealizarJugada
 	private Integer indice;
 	private Integer fila;
 	private Integer columna;
-
-	private Integer indiceVecinoCasillaVacia;
-
+	
 	public RealizarJugada(Integer valor, Integer indice, Integer fila, Integer columna)
 	{
 		super();
@@ -20,7 +18,7 @@ public class RealizarJugada
 		this.fila = fila;
 		this.columna = columna;
 		
-		Board.ActualizarBoardConNuevaFicha(1, this.columna);
+		Board.ActualizarBoardConNuevaFicha(this.columna);
 	}
 
 	public RealizarJugada()

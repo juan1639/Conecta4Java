@@ -4,10 +4,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,6 +23,7 @@ public class MainMenu extends JFrame
 
 	private JPanel panel;
 	private JLabel titulo;
+	private JLabel fondoImg;
 	private JButton botonJugar;
 
 	private final static Integer ANCHO_JFRAME = Settings.TILE_X * Settings.COLUMNAS;
@@ -40,7 +43,7 @@ public class MainMenu extends JFrame
 	public void settingsJFrame()
 	{
 		setSize(ANCHO_JFRAME, ALTO_JFRAME);
-		setTitle(" [ CONECTA-4 ]  Menu Principal");
+		setTitle(" CONECTA-4 | By Juan Eguia | Menu Principal");
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setMinimumSize(new Dimension(300, 200));
@@ -56,6 +59,7 @@ public class MainMenu extends JFrame
 
 		// panel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2, true));
 		panel.setBackground(Color.LIGHT_GRAY);
+
 		this.getContentPane().add(panel);
 	}
 
@@ -76,11 +80,26 @@ public class MainMenu extends JFrame
 		titulo.setBounds(x - (int) (txtWidth / 2), (int) (ALTO_JFRAME / 10), (int) (ANCHO_JFRAME / 2),
 				(int) (ALTO_JFRAME / 7));
 
-		titulo.setForeground(Settings.Colores.AZUL);
-		// etiquetaGO.setOpaque(true);
+		titulo.setForeground(Settings.Colores.AZUL); // etiquetaGO.setOpaque(true);
 
 		panel.add(titulo);
-		// panel.add(titulo, BorderLayout.CENTER);
+
+		crearFondoImg();
+	}
+
+	private void crearFondoImg()
+	{
+		fondoImg = new JLabel();
+
+		ImageIcon icono = new ImageIcon("media/board-game-connect4.png");
+		Image imagen = icono.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+
+		fondoImg.setIcon(new ImageIcon(imagen));
+		
+		double posX = Settings.COLUMNAS * Settings.TILE_X / 2.8;
+		fondoImg.setBounds((int) posX, 150, 200, 200);
+		
+		panel.add(fondoImg);
 	}
 
 	public void crearBotonJugar()

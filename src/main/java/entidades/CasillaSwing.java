@@ -14,8 +14,10 @@ import main.java.main.Settings;
 
 public class CasillaSwing
 {
-	private Integer valor, indice;
-	private Integer fila, columna;
+	private Integer valor;
+	private Integer indice;
+	private Integer fila;
+	private Integer columna;
 	private JButton casillaBoton;
 
 	public CasillaSwing(Integer valor, Integer indice, Integer fila, Integer columna)
@@ -29,36 +31,36 @@ public class CasillaSwing
 		this.casillaBoton.addMouseListener(eventoRaton());
 	}
 
-	// Cada casilla es un JButton para que sea "clickable" (o cualquier elemento
-	// Swing)
+	// Cada casilla es un JButton (o cualquier elemento Swing) para que sea
+	// "clickable"
 	private JButton crearCasillaBoton()
 	{
 		casillaBoton = new JButton(this.valor.toString());
 		configCasillaBoton(casillaBoton);
-		
+
 		return casillaBoton;
 	}
-	
+
 	public void configCasillaBoton(JButton casillaBoton)
 	{
 		int ancho = Settings.TILE_X;
 		int alto = Settings.TILE_Y;
-		
+
 		casillaBoton.setEnabled(true);
 		casillaBoton.setBounds(this.columna * ancho, this.fila * alto, ancho, alto);
-		
+
 		casillaBoton.setForeground(new Color(0, 0, 0, 0)); // Texto transparente
 		casillaBoton.setContentAreaFilled(false);
-        casillaBoton.setBorderPainted(false);
-        casillaBoton.setFocusPainted(false);
-        casillaBoton.setOpaque(false);
-        
-        ImageIcon icono = new ImageIcon(Settings.Fichas.VACIA);
+		casillaBoton.setBorderPainted(false);
+		casillaBoton.setFocusPainted(false);
+		casillaBoton.setOpaque(false);
+
+		ImageIcon icono = new ImageIcon(Settings.Fichas.VACIA);
 		Image imagen = icono.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-		
-        casillaBoton.setIcon(new ImageIcon(imagen));
-        casillaBoton.setHorizontalTextPosition(SwingConstants.CENTER);
-        casillaBoton.setVerticalTextPosition(SwingConstants.CENTER);
+
+		casillaBoton.setIcon(new ImageIcon(imagen));
+		casillaBoton.setHorizontalTextPosition(SwingConstants.CENTER);
+		casillaBoton.setVerticalTextPosition(SwingConstants.CENTER);
 	}
 
 	private MouseListener eventoRaton()
@@ -76,7 +78,8 @@ public class CasillaSwing
 				// System.out.println(e.getSource());
 				if (Settings.isEnJuego())
 				{
-					realizarJugadaClick(valor, indice, fila, columna);
+					//realizarJugadaClick(valor, indice, fila, columna);
+					new RealizarJugada(valor, indice, fila, columna);
 				}
 			}
 
@@ -88,27 +91,22 @@ public class CasillaSwing
 			@Override
 			public void mouseEntered(MouseEvent e)
 			{
-				//casillaBoton.setForeground(Settings.Colores.VERDE_CLARO);
+				// casillaBoton.setForeground(Settings.Colores.VERDE_CLARO);
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e)
 			{
-				//casillaBoton.setForeground(Settings.Colores.VERDE);
+				// casillaBoton.setForeground(Settings.Colores.VERDE);
 			}
 		};
 
 		return oyenteRaton;
 	}
-
-	private void realizarJugadaClick(Integer valor, Integer indice, Integer fila, Integer columna)
-	{
-		RealizarJugada jugada = new RealizarJugada(valor, indice, fila, columna);
-	}
-
+	
 	// ***********************************************************************
 	// Getters & Setters
-	// 
+	//
 	// ***********************************************************************
 	public Integer getValor()
 	{

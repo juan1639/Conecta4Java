@@ -14,6 +14,8 @@ public class Settings
 	public static final Integer NUMERO_CASILLAS = COLUMNAS * FILAS;
 	
 	public static final Integer INIT_TO_ZERO = 0;
+	public static final Integer JUGADOR = 1;
+	public static final Integer IA_O_JUGADOR2 = 2;
 	
 	private static Boolean preJuego = true;
 	private static Boolean enJuego = false;

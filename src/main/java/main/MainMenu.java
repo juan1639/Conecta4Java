@@ -5,15 +5,19 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 import main.java.tablero.Board;
 
@@ -25,7 +29,9 @@ public class MainMenu extends JFrame
 	private JLabel titulo;
 	private JLabel fondoImg;
 	private JButton botonJugar;
-
+	private JRadioButton opcion1;
+	private JRadioButton opcion2;
+	
 	private final static Integer ANCHO_JFRAME = Settings.TILE_X * Settings.COLUMNAS;
 	private final static Integer ALTO_JFRAME = Settings.TILE_Y * Settings.FILAS;
 
@@ -36,6 +42,7 @@ public class MainMenu extends JFrame
 		settingsJFrame();
 		crearPanel();
 		crearEtiquetas();
+		crearRadioButton();
 		crearBotonJugar();
 		botonJugar.addMouseListener(eventoBotonJugar());
 	}
@@ -77,7 +84,7 @@ public class MainMenu extends JFrame
 
 		// titulo.setHorizontalAlignment(SwingConstants.CENTER);
 
-		titulo.setBounds(x - (int) (txtWidth / 2), (int) (ALTO_JFRAME / 10), (int) (ANCHO_JFRAME / 2),
+		titulo.setBounds(x - (int) (txtWidth / 2), (int) (ALTO_JFRAME / 20), (int) (ANCHO_JFRAME / 2),
 				(int) (ALTO_JFRAME / 7));
 
 		titulo.setForeground(Settings.Colores.AZUL); // etiquetaGO.setOpaque(true);
@@ -92,16 +99,53 @@ public class MainMenu extends JFrame
 		fondoImg = new JLabel();
 
 		ImageIcon icono = new ImageIcon("media/board-game-connect4.png");
-		Image imagen = icono.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+		Image imagen = icono.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
 
 		fondoImg.setIcon(new ImageIcon(imagen));
-		
-		double posX = Settings.COLUMNAS * Settings.TILE_X / 2.8;
-		fondoImg.setBounds((int) posX, 150, 200, 200);
-		
+
+		double posX = Settings.COLUMNAS * Settings.TILE_X / 2.6;
+		fondoImg.setBounds((int) posX, 200, 150, 150);
+
 		panel.add(fondoImg);
 	}
 
+	private void crearRadioButton()
+	{
+		opcion1 = new JRadioButton("Comienza Jugador");
+		opcion2 = new JRadioButton("Comienza IA");
+
+		opcion1.setBounds(400 - (int) (80 / 2), (int) (ALTO_JFRAME / 4), (int) (ANCHO_JFRAME / 5),
+				(int) (ALTO_JFRAME / 20));
+
+		opcion2.setBounds(200 - (int) (80 / 2), (int) (ALTO_JFRAME / 4), (int) (ANCHO_JFRAME / 5),
+				(int) (ALTO_JFRAME / 20));
+
+		opcion1.setBackground(Color.LIGHT_GRAY);
+		opcion2.setBackground(Color.LIGHT_GRAY);
+
+		opcion1.setSelected(true);
+
+		// Agrupar los botones para que solo uno pueda estar seleccionado
+		ButtonGroup grupo = new ButtonGroup();
+		grupo.add(opcion1);
+		grupo.add(opcion2);
+		
+		ActionListener listener = new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// listener para detectar cambio en quien comienza...
+			}
+		};
+
+		opcion1.addActionListener(listener);
+		opcion2.addActionListener(listener);
+
+		panel.add(opcion1);
+		panel.add(opcion2);
+	}
+	
 	public void crearBotonJugar()
 	{
 		botonJugar = new JButton("Nueva Partida");
@@ -135,7 +179,7 @@ public class MainMenu extends JFrame
 			{
 				dispose();
 
-				Board tablero = new Board();
+				Board tablero = new Board(opcion1.isSelected());
 				tablero.setVisible(true);
 			}
 

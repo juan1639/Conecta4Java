@@ -16,6 +16,7 @@ import javax.swing.Timer;
 import main.java.entidades.CasillaSwing;
 import main.java.logica.Checks;
 import main.java.logica.RealizarJugada;
+import main.java.main.OptionPanePrePost;
 import main.java.main.Settings;
 
 public class Board extends JFrame implements ActionListener
@@ -35,8 +36,12 @@ public class Board extends JFrame implements ActionListener
 	
 	private static Boolean turno = true;// TRUE=turnoJugador1 | FALSE=turnoIA/Jugador2
 	
-	public Board()
+	public Board(Boolean quienComienza)
 	{
+		turno = quienComienza;
+		String idComenzar = turno ? "Jugador" : "AI";
+		System.out.println("Comienza: " + idComenzar);
+		
 		settingsJFrame();
 		crearPanel();
 		iniciarComponentesSwing();
@@ -69,7 +74,7 @@ public class Board extends JFrame implements ActionListener
 		this.getContentPane().add(panel);
 	}
 
-	public void iniciarComponentesSwing()
+	public static void iniciarComponentesSwing()
 	{
 		// Reseteamos SIEMPRE (rejugar y de paso siempre)
 		Settings.setPreJuego(false);
@@ -108,9 +113,9 @@ public class Board extends JFrame implements ActionListener
 		
 		Integer idJugador = turno ? 1 : 2;
 		
-		Integer[] posicion2D = Checks.CheckPrimeraCasillaVacia(columna);
+		Integer[] posicion2D = Checks.checkBuscarPrimeraCasillaVacia(columna);
 		
-		if (posicion2D[0].equals(-9))
+		if (posicion2D[0] <= -1 || posicion2D[0] >= Settings.COLUMNAS)
 		{
 			System.out.println("columna LLENA...");
 			return;
@@ -136,20 +141,28 @@ public class Board extends JFrame implements ActionListener
 		arrayCasillas[indice].getCasillaBoton().setHorizontalTextPosition(SwingConstants.CENTER);
 		arrayCasillas[indice].getCasillaBoton().setVerticalTextPosition(SwingConstants.CENTER);
 
-		panel.repaint(); // System.out.println("hecho swap");
-		
+		panel.repaint(); // Re-renderizar el Board
 		RealizarJugada.MostrarBoardValoresEnConsola();
-		turno = !turno;
 		
 		if (Checks.checkEmpate())
 		{
 			System.out.println("*** EMPATE ***");
 			Settings.setEnJuego(false);
 			Settings.setPuzzleResuelto(true);
+			OptionPanePrePost.prePostJuegoDialog();
 			return;
 		}
 		
-		// checkPuzzleResuelto();
+		if (Checks.checkHorVer(idJugador, 0, 1) || Checks.checkHorVer(idJugador, 1, 0) || Checks.checkDiagonales(idJugador))
+		{
+			System.out.println("*** CUATRO EN RAYA *** " + idJugador);
+			Settings.setEnJuego(false);
+			Settings.setPuzzleResuelto(true);
+			OptionPanePrePost.prePostJuegoDialog();
+			return;
+		}
+		
+		turno = !turno;
 	}
 	
 	private static void checkPuzzleResuelto()
@@ -167,7 +180,7 @@ public class Board extends JFrame implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		// OptionPanePrePost.preJuegoDialog();
+		// OptionPanePrePost.prePostJuegoDialog();
 	}
 
 	// ***********************************************************************

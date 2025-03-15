@@ -1,14 +1,13 @@
 package main.java.logica;
 
-import javax.swing.JButton;
-
-import main.java.entidades.CasillaSwing;
 import main.java.main.Settings;
 import main.java.tablero.Board;
 
 public class Checks
 {
-	public static Integer[] CheckPrimeraCasillaVacia(Integer columna)
+	private static final int CHECK_4 = 4;
+
+	public static Integer[] checkBuscarPrimeraCasillaVacia(Integer columna)
 	{
 		Integer FILAS = Settings.FILAS - 1;
 
@@ -24,7 +23,85 @@ public class Checks
 		return new Integer[]
 		{ -9, -9 };
 	}
-	
+
+	public static Boolean checkHorVer(Integer idJugador, int checkVer, int checkHor)
+	{
+		for (int fila = 0; fila < Settings.FILAS; fila++)
+		{
+			for (int col = 0; col < Settings.COLUMNAS; col++)
+			{
+				int contador = 0;
+
+				for (int i = 0; i < CHECK_4; i++)
+				{
+					if ((checkVer > 0 && fila + i >= Settings.FILAS) || (checkHor > 0 && col + i >= Settings.COLUMNAS))
+					{
+						break;
+					}
+
+					if (Board.getArrayInt()[fila + i * checkVer][col + i * checkHor] == idJugador)
+					{
+						contador++;
+					}
+				}
+
+				if (contador == CHECK_4)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public static Boolean checkDiagonales(Integer idJugador)
+	{
+		// Diagonal principal (\) - de arriba izquierda a abajo derecha
+		for (int fila = 0; fila <= Settings.FILAS - CHECK_4; fila++)
+		{
+			for (int col = 0; col <= Settings.COLUMNAS - CHECK_4; col++)
+			{
+				int contador = 0;
+				
+				for (int i = 0; i < CHECK_4; i++)
+				{
+					if (Board.getArrayInt()[fila + i][col + i] == idJugador)
+					{
+						contador++;
+					}
+				}
+				if (contador == CHECK_4)
+				{
+					return true;
+				}
+			}
+		}
+
+		// Diagonal secundaria (/) - de abajo izquierda a arriba derecha
+		for (int fila = CHECK_4 - 1; fila < Settings.FILAS; fila++)
+		{
+			for (int col = 0; col <= Settings.COLUMNAS - CHECK_4; col++)
+			{
+				int contador = 0;
+				
+				for (int i = 0; i < CHECK_4; i++)
+				{
+					if (Board.getArrayInt()[fila - i][col + i] == idJugador)
+					{
+						contador++;
+					}
+				}
+				if (contador == CHECK_4)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	public static Boolean checkEmpate()
 	{
 		for (int fila = 0; fila < Settings.FILAS; fila++)
@@ -48,12 +125,12 @@ public class Checks
 		return new Integer[]
 		{ fila, columna };
 	}
-	
+
 	public static Integer getIndicePosicion(Integer[] pos2D)
 	{
 		Integer fila = pos2D[0];
 		Integer columna = pos2D[1];
-		
+
 		return fila * Settings.COLUMNAS + columna;
 	}
 }

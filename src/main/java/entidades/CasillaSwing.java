@@ -11,6 +11,7 @@ import javax.swing.SwingConstants;
 
 import main.java.logica.RealizarJugada;
 import main.java.main.Settings;
+import main.java.tablero.Board;
 
 public class CasillaSwing
 {
@@ -76,7 +77,7 @@ public class CasillaSwing
 			public void mousePressed(MouseEvent e)
 			{
 				// System.out.println(e.getSource());
-				if (Settings.isEnJuego())
+				if (Settings.isEnJuego() && Board.getTurno())
 				{
 					//realizarJugadaClick(valor, indice, fila, columna);
 					new RealizarJugada(valor, indice, fila, columna);

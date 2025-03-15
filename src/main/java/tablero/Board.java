@@ -2,13 +2,16 @@ package main.java.tablero;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
@@ -16,6 +19,7 @@ import javax.swing.Timer;
 import main.java.entidades.CasillaSwing;
 import main.java.logica.Checks;
 import main.java.logica.RealizarJugada;
+import main.java.logica.RealizarJugadaIA;
 import main.java.main.OptionPanePrePost;
 import main.java.main.Settings;
 
@@ -33,15 +37,15 @@ public class Board extends JFrame implements ActionListener
 
 	public static JPanel panel;
 	private Timer timer;
-	
+
 	private static Boolean turno = true;// TRUE=turnoJugador1 | FALSE=turnoIA/Jugador2
-	
+
 	public Board(Boolean quienComienza)
 	{
 		turno = quienComienza;
 		String idComenzar = turno ? "Jugador" : "AI";
 		System.out.println("Comienza: " + idComenzar);
-		
+
 		settingsJFrame();
 		crearPanel();
 		iniciarComponentesSwing();
@@ -56,7 +60,7 @@ public class Board extends JFrame implements ActionListener
 		int ajusteX = 12, ajusteY = 34;
 
 		setSize(ANCHO_JFRAME + ajusteX, ALTO_JFRAME + ajusteY);
-		setTitle(" CONECTA-4  |  Haga CLICK en una columna para tirar ficha...");
+		setTitle(" CONECTA-4  | Jugador, cuando sea su turno, haga CLICK en una columna para tirar ficha...");
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setMinimumSize(new Dimension(300, 300));
@@ -97,7 +101,7 @@ public class Board extends JFrame implements ActionListener
 			for (int col = 0; col < Settings.COLUMNAS; col++)
 			{
 				arrayInt[fila][col] = Settings.INIT_TO_ZERO;
-				
+
 				CasillaSwing casilla = new CasillaSwing(Settings.INIT_TO_ZERO, i, fila, col);
 				arrayCasillas[i] = casilla;
 				JButton casillaBoton = casilla.getCasillaBoton();
@@ -105,34 +109,49 @@ public class Board extends JFrame implements ActionListener
 				i++;
 			}
 		}
+		
+		if (!turno)
+		{
+			callBackJugadaIA();
+		}
 	}
 
 	public static void ActualizarBoardConNuevaFicha(Integer columna)
 	{
 		System.out.println("columna: " + columna);
-		
+
+		if (!turno)
+		{
+			columna = RealizarJugadaIA.jugadaRandom();
+		}
+
 		Integer idJugador = turno ? 1 : 2;
-		
+
 		Integer[] posicion2D = Checks.checkBuscarPrimeraCasillaVacia(columna);
-		
+
 		if (posicion2D[0] <= -1 || posicion2D[0] >= Settings.COLUMNAS)
 		{
 			System.out.println("columna LLENA...");
+			
+			if (!turno)
+			{
+				ActualizarBoardConNuevaFicha(-999);
+			}
 			return;
 		}
-		
+
 		Integer indice = Checks.getIndicePosicion(posicion2D);
-		
+
 		// ***********************************************************
 		// Cambiar valor (Primitivos)
-		// 
+		//
 		// ***********************************************************
 		arrayCasillas[indice].setValor(idJugador);
 		arrayInt[posicion2D[0]][posicion2D[1]] = idJugador;
 
 		// ***********************************************************
 		// Cambiar Componentes-Swing
-		// 
+		//
 		// ***********************************************************
 		ImageIcon icono = new ImageIcon(turno ? Settings.Fichas.ROJA : Settings.Fichas.AMARILLA);
 		Image imagen = icono.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
@@ -143,7 +162,7 @@ public class Board extends JFrame implements ActionListener
 
 		panel.repaint(); // Re-renderizar el Board
 		RealizarJugada.MostrarBoardValoresEnConsola();
-		
+
 		if (Checks.checkEmpate())
 		{
 			System.out.println("*** EMPATE ***");
@@ -152,8 +171,9 @@ public class Board extends JFrame implements ActionListener
 			OptionPanePrePost.prePostJuegoDialog();
 			return;
 		}
-		
-		if (Checks.checkHorVer(idJugador, 0, 1) || Checks.checkHorVer(idJugador, 1, 0) || Checks.checkDiagonales(idJugador))
+
+		if (Checks.checkHorVer(idJugador, 0, 1) || Checks.checkHorVer(idJugador, 1, 0)
+				|| Checks.checkDiagonales(idJugador))
 		{
 			System.out.println("*** CUATRO EN RAYA *** " + idJugador);
 			Settings.setEnJuego(false);
@@ -161,20 +181,31 @@ public class Board extends JFrame implements ActionListener
 			OptionPanePrePost.prePostJuegoDialog();
 			return;
 		}
-		
+
 		turno = !turno;
+		
+		if (!turno)
+		{
+			callBackJugadaIA();
+		}
 	}
 	
-	private static void checkPuzzleResuelto()
+	private static void callBackJugadaIA()
 	{
-		/*
-		 * if (CheckPuzzleResueltoClass.checkBoard() && Settings.isEnJuego()) {
-		 * 
-		 * System.out.println("RESUELTO!!"); Settings.setEnJuego(false);
-		 * Settings.setPuzzleResuelto(true);
-		 * 
-		 * OptionPanePrePost.preJuegoDialog(); }
-		 */
+		JDialog dialog = RealizarJugadaIA.crearMsgInfoIAPensando();
+		
+		Timer tiempoRespuestaIA = new Timer(2000, new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				dialog.dispose();
+				ActualizarBoardConNuevaFicha(-999);
+			}
+		});
+
+		tiempoRespuestaIA.setRepeats(false);
+		tiempoRespuestaIA.start();
 	}
 	
 	@Override
@@ -205,5 +236,10 @@ public class Board extends JFrame implements ActionListener
 	public static void setArrayInt(Integer[][] arrayInt)
 	{
 		Board.arrayInt = arrayInt;
+	}
+
+	public static Boolean getTurno()
+	{
+		return turno;
 	}
 }

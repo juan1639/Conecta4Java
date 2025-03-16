@@ -186,7 +186,7 @@ public class Board extends JFrame implements ActionListener
 			System.out.println("*** EMPATE ***");
 			Settings.setEnJuego(false);
 			Settings.setPuzzleResuelto(true);
-			OptionPanePrePost.prePostJuegoDialog();
+			OptionPanePrePost.prePostJuegoDialog(" EMPATE ");
 			return;
 		}
 
@@ -196,7 +196,9 @@ public class Board extends JFrame implements ActionListener
 			System.out.println("*** CUATRO EN RAYA *** " + idJugador);
 			Settings.setEnJuego(false);
 			Settings.setPuzzleResuelto(true);
-			OptionPanePrePost.prePostJuegoDialog();
+			
+			String msgResultado = turno ? " ENHORABUENA! Jugador GANA! " : " IA GANA la partida ";
+			OptionPanePrePost.prePostJuegoDialog(msgResultado);
 			return;
 		}
 

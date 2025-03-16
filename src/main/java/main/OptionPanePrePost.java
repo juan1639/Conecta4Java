@@ -8,7 +8,7 @@ import main.java.tablero.Board;
 
 public class OptionPanePrePost
 {
-	public static void prePostJuegoDialog()
+	public static void prePostJuegoDialog(String msgResultado)
 	{
 		int newGamePane;
 		int gameoverPane;
@@ -31,7 +31,7 @@ public class OptionPanePrePost
 		} else if (Settings.isPuzzleResuelto())
 		{
 			gameoverPane = JOptionPane.showConfirmDialog(Board.panel, " VOLVER A JUGAR ? ",
-					" ENHORABUENA! Puzzle Resuelto! ", JOptionPane.YES_NO_CANCEL_OPTION);
+					msgResultado, JOptionPane.YES_NO_CANCEL_OPTION);
 
 			if (gameoverPane == JOptionPane.NO_OPTION || gameoverPane == JOptionPane.CANCEL_OPTION)
 			{

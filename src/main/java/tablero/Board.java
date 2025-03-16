@@ -2,7 +2,6 @@ package main.java.tablero;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,7 +10,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
@@ -109,7 +107,7 @@ public class Board extends JFrame implements ActionListener
 				i++;
 			}
 		}
-		
+
 		if (!turno)
 		{
 			callBackJugadaIA();
@@ -122,17 +120,24 @@ public class Board extends JFrame implements ActionListener
 
 		if (!turno)
 		{
-			columna = RealizarJugadaIA.jugadaRandom();
+			if (RealizarJugadaIA.checkSiIA4Raya()[1] >= 0 && RealizarJugadaIA.checkSiIA4Raya()[1] < Settings.COLUMNAS)
+			{
+				columna = RealizarJugadaIA.checkSiIA4Raya()[1];
+
+			} else
+			{
+				columna = RealizarJugadaIA.jugadaRandom();
+			}
 		}
 
 		Integer idJugador = turno ? 1 : 2;
 
 		Integer[] posicion2D = Checks.checkBuscarPrimeraCasillaVacia(columna);
 
-		if (posicion2D[0] <= -1 || posicion2D[0] >= Settings.COLUMNAS)
+		if (posicion2D[1] <= -1 || posicion2D[1] >= Settings.COLUMNAS)
 		{
 			System.out.println("columna LLENA...");
-			
+
 			if (!turno)
 			{
 				ActualizarBoardConNuevaFicha(-999);
@@ -183,17 +188,17 @@ public class Board extends JFrame implements ActionListener
 		}
 
 		turno = !turno;
-		
+
 		if (!turno)
 		{
 			callBackJugadaIA();
 		}
 	}
-	
+
 	private static void callBackJugadaIA()
 	{
 		JDialog dialog = RealizarJugadaIA.crearMsgInfoIAPensando();
-		
+
 		Timer tiempoRespuestaIA = new Timer(2000, new ActionListener()
 		{
 			@Override
@@ -207,7 +212,7 @@ public class Board extends JFrame implements ActionListener
 		tiempoRespuestaIA.setRepeats(false);
 		tiempoRespuestaIA.start();
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{

@@ -14,7 +14,7 @@ public class RealizarJugadaIA
 	private static Integer[][] copiaArrayInt;
 	private static Boolean banderaCheckPrimeraVacia = false;
 
-	public static Integer[] checkSiIA4Raya()
+	public static Integer[] checkSiIA4Raya(Integer ID_JUGADOR)
 	{
 		for (int columna = 0; columna < Settings.COLUMNAS; columna++)
 		{
@@ -26,12 +26,12 @@ public class RealizarJugadaIA
 				if (Board.getArrayInt()[i][columna] == Settings.INIT_TO_ZERO && !banderaCheckPrimeraVacia)
 				{
 					copiaArrayInt = Board.getArrayInt();
-					copiaArrayInt[i][columna] = Settings.IA_O_JUGADOR2;
+					copiaArrayInt[i][columna] = ID_JUGADOR;
 					Board.setArrayInt(copiaArrayInt);
 
-					if (Checks.checkHorVer(Settings.IA_O_JUGADOR2, 0, 1)
-							|| Checks.checkHorVer(Settings.IA_O_JUGADOR2, 1, 0)
-							|| Checks.checkDiagonales(Settings.IA_O_JUGADOR2))
+					if (Checks.checkHorVer(ID_JUGADOR, 0, 1)
+							|| Checks.checkHorVer(ID_JUGADOR, 1, 0)
+							|| Checks.checkDiagonales(ID_JUGADOR))
 					{
 						copiaArrayInt[i][columna] = Settings.INIT_TO_ZERO;
 						Board.setArrayInt(copiaArrayInt);
@@ -51,7 +51,7 @@ public class RealizarJugadaIA
 		return new Integer[]
 		{ -9, -9 };
 	}
-
+	
 	public static int jugadaRandom()
 	{
 		return (int) Math.floor(Math.random() * Settings.COLUMNAS);

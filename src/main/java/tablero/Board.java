@@ -37,6 +37,7 @@ public class Board extends JFrame implements ActionListener
 	private Timer timer;
 
 	private static Boolean turno = true;// TRUE=turnoJugador1 | FALSE=turnoIA/Jugador2
+	private static Integer contadorTiradasIA = 1;
 
 	public Board(Boolean quienComienza)
 	{
@@ -81,6 +82,7 @@ public class Board extends JFrame implements ActionListener
 		// Reseteamos SIEMPRE (rejugar y de paso siempre)
 		Settings.setPreJuego(false);
 		Settings.setEnJuego(true);
+		contadorTiradasIA = 1;
 
 		for (int i = 0; i < NUMERO_CASILLAS; i++)
 		{
@@ -120,9 +122,20 @@ public class Board extends JFrame implements ActionListener
 
 		if (!turno)
 		{
-			if (RealizarJugadaIA.checkSiIA4Raya()[1] >= 0 && RealizarJugadaIA.checkSiIA4Raya()[1] < Settings.COLUMNAS)
+			Integer[] checkIAWins = RealizarJugadaIA.checkSiIA4Raya(Settings.IA_O_JUGADOR2);
+			Integer[] checkIADefender = RealizarJugadaIA.checkSiIA4Raya(Settings.JUGADOR);
+
+			if (contadorTiradasIA < 2)
 			{
-				columna = RealizarJugadaIA.checkSiIA4Raya()[1];
+				columna = 3;// Primera tirada coger el centro...
+
+			} else if (checkIAWins[1] >= 0 && checkIAWins[1] < Settings.COLUMNAS)
+			{
+				columna = checkIAWins[1];
+
+			} else if (checkIADefender[1] >= 0 && checkIADefender[1] < Settings.COLUMNAS)
+			{
+				columna = checkIADefender[1];
 
 			} else
 			{
@@ -191,6 +204,7 @@ public class Board extends JFrame implements ActionListener
 
 		if (!turno)
 		{
+			contadorTiradasIA ++;
 			callBackJugadaIA();
 		}
 	}
